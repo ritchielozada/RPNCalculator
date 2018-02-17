@@ -12,6 +12,8 @@ Line based input for infix arithmetic equations. Supports the following operator
 - '1/X' Reciprocal
 - '!' Factorial
 
+- Parenthesis precedence
+
 Supports Inline Clear (C) and All Clear (A) Functions
 
 
@@ -25,4 +27,4 @@ Supports Inline Clear (C) and All Clear (A) Functions
 
 4. Implemented on Visual Studio Enterprise 2017 v15.5.6.  Dependent on MSTest.TestAdapter.1.2.0 and MSTest.TestFramework.1.2.0 for Test package.
 
-5. Will extend to support parenthesis for precedence and additional function operators such as SQR, POW and SQRT
+5. Will support additional function operators such as SQR, POW and SQRT

@@ -211,14 +211,15 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void T12_FactorialError()
+        public void T12_FactorialValidationError()
         {
             var client = new Client();
             double result;
             string errorMessage;
 
+            // Negative Sign not accepted for Factorial
             var parseResult = client.Parse("-5! =", out result, out errorMessage);
-            // Token is BLOCKED for Factorial
+            
 
             Assert.IsFalse(parseResult);
             Assert.AreEqual(-5, result);
@@ -258,6 +259,41 @@ namespace UnitTests
             var parseResult = client.Parse("1 + 2 + 3 =", out result, out errorMessage);
             Assert.IsFalse(parseResult);
             Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void T16_ParenthesesEval()
+        {
+            var client = new Client();
+            double result;
+            string errorMessage;
+
+            var parseResult = client.Parse("(1 + 2) * 3 =", out result, out errorMessage);
+            Assert.IsTrue(parseResult);
+            Assert.AreEqual(9, result);
+        }
+
+        [TestMethod]
+        public void T17_ParenthesesEval2()
+        {
+            var client = new Client();
+            double result;
+            string errorMessage;
+
+            var parseResult = client.Parse("((1 + 2) * (2 + 2)) * (3 - 1) =", out result, out errorMessage);
+            Assert.IsTrue(parseResult);
+            Assert.AreEqual(24, result);
+        }
+
+        [TestMethod]
+        public void T18_ParenthesesMismatch()
+        {
+            var client = new Client();
+            double result;
+            string errorMessage;
+
+            var parseResult = client.Parse("(1 + 2)) =", out result, out errorMessage);
+            Assert.IsFalse(parseResult);            
         }
     }
 }

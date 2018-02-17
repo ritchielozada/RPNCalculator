@@ -19,8 +19,9 @@ namespace Calculator
         private readonly Receiver _receiver;
 
 
-        // TODO: Parse multi-character operators
-        private const string ParseRegex = @"[\!\+\*/\=RCAQ]{1}|\-?\d*\.*\d*|\-*";
+        // TODO: Parse multi-character operators        
+        private const string ParseRegex = @"[\(\)\!\+\*/\=RCAQ]{1}|\-?\d*\.*\d*|\-{1}";
+
         private readonly Regex _regex = new Regex(ParseRegex);
 
         public Client(int maxInputLen = 1024)
@@ -59,18 +60,18 @@ namespace Calculator
                 {"-", 3},
                 {"C", 3},
                 {"Q", 3},
-                {"A", 3},
+                {"A", 3},              
                 {"=", 99}
             };
 
             // Commands and Unary Operators
             _commandSet = new HashSet<string>
             {
-                "C", // Clear Previous Number
-                "A", // All Clear
-                "Q", // Quit
-                "R", // Reciprocal
-                "!" // Factorial
+                "C",    // Clear Previous Number
+                "A",    // All Clear
+                "Q",    // Quit
+                "R",    // Reciprocal                
+                "!"     // Factorial
             };
         }
 
@@ -132,7 +133,9 @@ namespace Calculator
                         var tokenP = _precedenceDict[token];
                         while (operatorStack.Count >= 0)
                         {
-                            if (operatorStack.Count > 0 && tokenP >= _precedenceDict[operatorStack.Peek()])
+                            if (operatorStack.Count > 0 &&
+                                _precedenceDict.ContainsKey(operatorStack.Peek()) && 
+                                tokenP >= _precedenceDict[operatorStack.Peek()])
                             {
                                 outputQueue.Enqueue(operatorStack.Pop());
                             }
@@ -148,9 +151,31 @@ namespace Calculator
                         operatorStack.Push(token);
                     }
                 }
-                else
+                else if (token == "(")
                 {
-                    // Operand
+                    operatorStack.Push(token);
+                }
+                else if (token == ")")
+                {
+                    while ((operatorStack.Count > 0) && (operatorStack.Peek() != "("))
+                    {
+                        outputQueue.Enqueue(operatorStack.Pop());
+                    }
+
+                    if (operatorStack.Count == 0)
+                    {
+                        errorMessage = "Mismatched Parentheses";
+                        result = 0;
+                        return false;
+                    }
+                    else
+                    {
+                        // Pop the matching parenthesis
+                        operatorStack.Pop();
+                    }
+                }
+                else     // Assume Operand
+                {                
                     outputQueue.Enqueue(token);
                 }
             }
