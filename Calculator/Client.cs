@@ -42,7 +42,7 @@ namespace Calculator
                 new QuitCommand(_receiver)
             );
 
-            // TODO: Handle this is equation parsing                                    
+            // TODO: Handle this in equation parsing                                    
             _replacementDict = new Dictionary<string, string>
             {
                 {"1/X", "R"} // Reciprocal                
@@ -76,7 +76,7 @@ namespace Calculator
         }
 
 
-        // TODO: Chnage Parsing Approach
+        // TODO: Change Parsing Approach
         private string OperatorReplacement(string str)
         {
             var s = str.ToUpper();
@@ -88,6 +88,7 @@ namespace Calculator
             return s;
         }
 
+        // Infix to Postfix Direction Conversion without using Evaluation Tree
         public bool Parse(string str, out double result, out string errorMessage)
         {
             Queue<string> tokenQueue = new Queue<string>();
